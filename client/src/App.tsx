@@ -10,7 +10,7 @@ import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import Resourcing from './pages/Resourcing';
 import Partners from './pages/Partners';
-import Scout from './pages/Scout';
+
 import Settings from './pages/Settings';
 
 const queryClient = new QueryClient({
@@ -49,7 +49,7 @@ function AppRoutes() {
         <Route path="resourcing" element={<Resourcing />} />
         <Route path="partners" element={<Partners />} />
         <Route path="partners/:id" element={<Partners />} />
-        <Route path="scout" element={<Scout />} />
+
         <Route
           path="settings"
           element={

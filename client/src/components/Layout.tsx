@@ -6,7 +6,6 @@ const navItems = [
   { to: '/projects', label: 'Projects' },
   { to: '/resourcing', label: 'Resourcing' },
   { to: '/partners', label: 'Partners' },
-  { to: '/scout', label: 'Scout' },
 ];
 
 export default function Layout() {
@@ -34,7 +33,7 @@ export default function Layout() {
             className="font-medium text-sm tracking-tight"
             style={{ color: 'var(--text)', fontSize: '15px' }}
           >
-            Hippo
+            Hippo-Mifflin
           </span>
           <div className="flex items-center gap-1">
             {navItems.map((item) => (
