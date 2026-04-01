@@ -1,0 +1,11 @@
+{
+  "name": "hippo",
+  "version": "1.0.0",
+  "description": "Hippo production management app",
+  "scripts": {
+    "start:prod": "node server/dist/index.js"
+  },
+  "engines": {
+    "node": "20"
+  }
+}

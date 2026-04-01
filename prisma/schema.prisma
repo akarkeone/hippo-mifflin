@@ -1,0 +1,278 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../server/node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Models ──────────────────────────────────────────────────────────────────
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password_hash String
+  role          String
+  name          String
+  title         String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  milestones    Milestone[]       @relation("assignee")
+  team_members  ProjectTeamMember[]
+  ratings       PartnerRating[]   @relation("rated_by")
+  google_token  GoogleToken?
+
+  @@map("users")
+}
+
+model Client {
+  id         String   @id @default(uuid())
+  name       String
+  color_hex  String
+  logo_url   String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  projects Project[]
+
+  @@map("clients")
+}
+
+model Project {
+  id         String   @id @default(uuid())
+  client_id  String
+  name       String
+  status     String
+  due_date   DateTime?
+  notes      String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  client          Client              @relation(fields: [client_id], references: [id])
+  budget_items    BudgetLineItem[]
+  milestones      Milestone[]
+  team_members    ProjectTeamMember[]
+  categories      ProjectCategory[]
+  partners        ProjectPartner[]
+  partner_ratings PartnerRating[]
+  assets          Asset[]
+  members         ProjectMember[]
+
+  @@map("projects")
+}
+
+model BudgetLineItem {
+  id             String   @id @default(uuid())
+  project_id     String
+  label          String
+  description    String?
+  amount_cents   Int
+  actuals_cents  Int      @default(0)
+  is_agency_fee  Boolean  @default(false)
+  sort_order     Int?
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+
+  @@map("budget_line_items")
+}
+
+model Milestone {
+  id             String    @id @default(uuid())
+  project_id     String
+  assignee_id    String?
+  tm_assignee_id String?
+  name           String
+  start_date     DateTime?
+  end_date       DateTime?
+  completed      Boolean   @default(false)
+  sort_order     Int?
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+
+  project     Project     @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  assignee    User?       @relation("assignee", fields: [assignee_id], references: [id])
+  tm_assignee TeamMember? @relation("tm_assignee", fields: [tm_assignee_id], references: [id])
+
+  @@map("milestones")
+}
+
+model ProjectTeamMember {
+  project_id String
+  user_id    String
+  role_label String?
+
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [user_id], references: [id])
+
+  @@id([project_id, user_id])
+  @@map("project_team_members")
+}
+
+model Category {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  projects ProjectCategory[]
+  partners PartnerCategory[]
+
+  @@map("categories")
+}
+
+model Partner {
+  id           String   @id @default(uuid())
+  company_name String
+  type         String?
+  location     String?
+  notes        String?
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  contacts     PartnerContact[]
+  ratings      PartnerRating[]
+  projects     ProjectPartner[]
+  categories   PartnerCategory[]
+  specialities PartnerSpeciality[]
+
+  @@map("partners")
+}
+
+model PartnerContact {
+  id         String   @id @default(uuid())
+  partner_id String
+  name       String
+  title      String?
+  email      String?
+  phone      String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  partner Partner @relation(fields: [partner_id], references: [id], onDelete: Cascade)
+
+  @@map("partner_contacts")
+}
+
+model PartnerRating {
+  id                 String   @id @default(uuid())
+  partner_id         String
+  project_id         String
+  speed_efficiency   Float?
+  budget_flexibility Float?
+  creativity         Float?
+  onset_performance  Float?
+  rated_by           String
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+
+  partner Partner @relation(fields: [partner_id], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [project_id], references: [id])
+  rater   User    @relation("rated_by", fields: [rated_by], references: [id])
+
+  @@map("partner_ratings")
+}
+
+model ProjectCategory {
+  project_id  String
+  category_id String
+
+  project  Project  @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [category_id], references: [id])
+
+  @@id([project_id, category_id])
+  @@map("project_categories")
+}
+
+model ProjectPartner {
+  project_id String
+  partner_id String
+
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  partner Partner @relation(fields: [partner_id], references: [id])
+
+  @@id([project_id, partner_id])
+  @@map("project_partners")
+}
+
+model PartnerCategory {
+  partner_id  String
+  category_id String
+
+  partner  Partner  @relation(fields: [partner_id], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [category_id], references: [id])
+
+  @@id([partner_id, category_id])
+  @@map("partner_categories")
+}
+
+model PartnerSpeciality {
+  id         String   @id @default(uuid())
+  partner_id String
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  partner Partner @relation(fields: [partner_id], references: [id], onDelete: Cascade)
+
+  @@map("partner_specialities")
+}
+
+model Asset {
+  id         String   @id @default(uuid())
+  project_id String
+  label      String
+  url        String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  project Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
+
+  @@map("assets")
+}
+
+model TeamMember {
+  id         String   @id @default(uuid())
+  name       String
+  title      String?
+  email      String?
+  post       Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  project_members       ProjectMember[]
+  milestone_assignments Milestone[]     @relation("tm_assignee")
+
+  @@map("team_members")
+}
+
+model ProjectMember {
+  id             String  @id @default(uuid())
+  project_id     String
+  team_member_id String
+  role_label     String?
+
+  project     Project    @relation(fields: [project_id], references: [id], onDelete: Cascade)
+  team_member TeamMember @relation(fields: [team_member_id], references: [id])
+
+  @@unique([project_id, team_member_id])
+  @@map("project_members")
+}
+
+model GoogleToken {
+  id                String   @id @default(uuid())
+  user_id           String   @unique
+  encrypted_refresh String
+  access_token      String?
+  expires_at        DateTime?
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("google_tokens")
+}
