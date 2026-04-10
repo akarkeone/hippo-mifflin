@@ -6,6 +6,7 @@ const navItems = [
   { to: '/projects', label: 'Projects' },
   { to: '/resourcing', label: 'Resourcing' },
   { to: '/partners', label: 'Partners' },
+  { to: '/budget-planner', label: 'Budget Planner' },
 ];
 
 export default function Layout() {

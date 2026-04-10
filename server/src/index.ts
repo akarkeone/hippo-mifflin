@@ -17,6 +17,7 @@ import scoutRoutes from './routes/scout';
 import googleRoutes from './routes/google';
 import categoryRoutes from './routes/categories';
 import teamMemberRoutes from './routes/teamMembers';
+import budgetScenarioRoutes from './routes/budgetScenarios';
 
 const app = express();
 const PORT = process.env.PORT ?? 3001;
@@ -48,6 +49,7 @@ app.use('/api/v1/partners', authenticateToken, partnerRoutes);
 app.use('/api/v1/scout', authenticateToken, scoutRoutes);
 app.use('/api/v1/categories', authenticateToken, categoryRoutes);
 app.use('/api/v1/team-members', authenticateToken, teamMemberRoutes);
+app.use('/api/v1/budget-scenarios', authenticateToken, budgetScenarioRoutes);
 
 // In production, serve the React build and handle SPA routing
 if (isProd) {
@@ -303,6 +305,66 @@ async function seedProd() {
       { project_id: p5.id, label: 'Motion Graphics',   amount_cents:  500000, actuals_cents:  500000, sort_order: 3 },
       { project_id: p5.id, label: 'Agency fee',        amount_cents:  600000, actuals_cents:  600000, is_agency_fee: true, sort_order: 4 },
     ]});
+
+    // ── Budget Scenarios ──────────────────────────────────────────────────────
+    await prisma.budgetScenario.createMany({
+      data: [
+        {
+          name: 'Dunder Mifflin — Paper Empire Campaign',
+          project_name: 'Paper Empire Campaign',
+          client_name: 'Dunder Mifflin',
+          client_color: '2563A2',
+          cad_rate: 1.38,
+          rows: [
+            { id: 1, category: 'Director',        desc: '' },
+            { id: 2, category: 'Editor',          desc: '' },
+            { id: 3, category: 'Motion Graphics', desc: '' },
+            { id: 4, category: 'Color Grade',     desc: '' },
+            { id: 5, category: 'Audio Post',      desc: '' },
+          ],
+          budgets: [
+            { id: 'a', name: 'Conservative', values: { '1': 16000, '2': 8500,  '3': 5000, '4': 3000, '5': 2500, fee: 6300  } },
+            { id: 'b', name: 'Recommended',  values: { '1': 20000, '2': 10500, '3': 6500, '4': 4000, '5': 3200, fee: 7840  } },
+            { id: 'c', name: 'Premium',      values: { '1': 26000, '2': 13000, '3': 8500, '4': 5500, '5': 4200, fee: 10010 } },
+          ],
+        },
+        {
+          name: 'Sabre Corporation — Sabre Printer Launch',
+          project_name: 'Sabre Printer Launch',
+          client_name: 'Sabre Corporation',
+          client_color: 'E8391D',
+          cad_rate: 1.38,
+          rows: [
+            { id: 1, category: 'Director',         desc: '' },
+            { id: 2, category: 'Editor / Colorist', desc: '' },
+            { id: 3, category: 'Audio Post',        desc: '' },
+            { id: 4, category: 'Social Versioning', desc: '' },
+          ],
+          budgets: [
+            { id: 'a', name: 'Lean', values: { '1': 18000, '2': 9500,  '3': 3500, '4': 2500, fee: 6675 } },
+            { id: 'b', name: 'Full', values: { '1': 26000, '2': 14000, '3': 5500, '4': 4000, fee: 9975 } },
+          ],
+        },
+        {
+          name: 'Michael Scott Paper Co. — Threat Level Midnight',
+          project_name: 'Threat Level Midnight',
+          client_name: 'Michael Scott Paper Co.',
+          client_color: '3DAA6E',
+          cad_rate: 1.38,
+          rows: [
+            { id: 1, category: 'Director',              desc: '' },
+            { id: 2, category: 'Editor',                desc: '' },
+            { id: 3, category: 'VFX & Motion Graphics', desc: '' },
+            { id: 4, category: 'Color Grade',           desc: '' },
+            { id: 5, category: 'Original Score',        desc: '' },
+          ],
+          budgets: [
+            { id: 'a', name: "Original Cut",    values: { '1': 28000, '2': 18000, '3': 12000, '4': 6500, '5': 5000, fee: 13975 } },
+            { id: 'b', name: "Director's Cut",  values: { '1': 38000, '2': 24000, '3': 18000, '4': 9000, '5': 8000, fee: 19350 } },
+          ],
+        },
+      ],
+    });
 
     // Suppress unused var warnings — variables referenced to satisfy TS
     void [documentary, p1, p2, p3, p4, p5];

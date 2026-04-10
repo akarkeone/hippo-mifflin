@@ -12,6 +12,7 @@ import Resourcing from './pages/Resourcing';
 import Partners from './pages/Partners';
 
 import Settings from './pages/Settings';
+import BudgetPlanner from './pages/BudgetPlanner';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,6 +50,7 @@ function AppRoutes() {
         <Route path="resourcing" element={<Resourcing />} />
         <Route path="partners" element={<Partners />} />
         <Route path="partners/:id" element={<Partners />} />
+        <Route path="budget-planner" element={<BudgetPlanner />} />
 
         <Route
           path="settings"

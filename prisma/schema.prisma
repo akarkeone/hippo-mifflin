@@ -263,6 +263,21 @@ model ProjectMember {
   @@map("project_members")
 }
 
+model BudgetScenario {
+  id           String   @id @default(uuid())
+  name         String
+  project_name String
+  client_name  String
+  client_color String   @default("888888")
+  rows         Json
+  budgets      Json
+  cad_rate     Float    @default(1.38)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@map("budget_scenarios")
+}
+
 model GoogleToken {
   id                String   @id @default(uuid())
   user_id           String   @unique
