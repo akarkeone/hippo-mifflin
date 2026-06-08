@@ -39,26 +39,6 @@ export default function SignIn() {
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div
             style={{
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'center',
-              gap: 0,
-              marginBottom: 10,
-            }}
-          >
-            <img
-              src="/hippoBoy.png"
-              alt="Hippo Boy"
-              style={{ width: 72, height: 'auto', transform: 'scaleX(-1)' }}
-            />
-            <img
-              src="/hippoGirl.png"
-              alt="Hippo Girl"
-              style={{ width: 72, height: 'auto' }}
-            />
-          </div>
-          <div
-            style={{
               fontSize: 32,
               fontWeight: 500,
               letterSpacing: '-0.02em',
