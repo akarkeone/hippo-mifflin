@@ -35,8 +35,13 @@ export default function SignIn() {
       }}
     >
       <div style={{ width: '100%', maxWidth: 380 }}>
-        {/* Hippos + wordmark */}
+        {/* Logo + wordmark + tagline */}
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
+          <img
+            src="/hippo-logo.png"
+            alt="Hippo"
+            style={{ width: 80, height: 'auto', display: 'block', margin: '0 auto 10px' }}
+          />
           <div
             style={{
               fontSize: 32,
@@ -47,6 +52,16 @@ export default function SignIn() {
             }}
           >
             Hippo
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              color: 'var(--text3)',
+              letterSpacing: '0.04em',
+              marginTop: 5,
+            }}
+          >
+            stay above water
           </div>
         </div>
 
