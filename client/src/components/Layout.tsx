@@ -30,12 +30,15 @@ export default function Layout() {
         }}
       >
         <div className="flex items-center gap-6">
-          <span
-            className="font-medium text-sm tracking-tight"
-            style={{ color: 'var(--text)', fontSize: '15px' }}
-          >
-            Hippo-Mifflin
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
+            <img src="/hippo-logo.png" alt="Hippo" style={{ width: 28, height: 'auto' }} />
+            <span
+              className="font-medium text-sm tracking-tight"
+              style={{ color: 'var(--text)', fontSize: '15px' }}
+            >
+              Hippo
+            </span>
+          </div>
           <div className="flex items-center gap-1">
             {navItems.map((item) => (
               <NavLink
